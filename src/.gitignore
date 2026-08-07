@@ -1,0 +1,10 @@
+﻿data/
+.build/
+**/__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+mfe/node_modules/
+dist_mfe/
+bin/*.exe
+bin/*.dll

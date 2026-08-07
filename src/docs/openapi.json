@@ -1,0 +1,844 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Z4",
+    "description": "Continuously monitors PC component markets to design the optimal build at the lowest practical cost.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health",
+        "operationId": "health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Health Api V1 Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shutdown": {
+      "post": {
+        "tags": [
+          "lifecycle"
+        ],
+        "summary": "Shutdown",
+        "operationId": "shutdown_api_v1_shutdown_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Shutdown Api V1 Shutdown Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/jobs/marketplace-sync": {
+      "post": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Marketplace Sync",
+        "operationId": "marketplace_sync_api_v1_jobs_marketplace_sync_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/MarketplaceSyncRequest"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketplaceSyncResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/listings": {
+      "get": {
+        "tags": [
+          "listings"
+        ],
+        "summary": "List Listings",
+        "operationId": "list_listings_api_v1_listings_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ListingView"
+                  },
+                  "type": "array",
+                  "title": "Response List Listings Api V1 Listings Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/home": {
+      "get": {
+        "tags": [
+          "home"
+        ],
+        "summary": "Get Home",
+        "operationId": "get_home_api_v1_home_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HomeProjection"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/goal": {
+      "put": {
+        "tags": [
+          "home"
+        ],
+        "summary": "Put Goal",
+        "operationId": "put_goal_api_v1_goal_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoalUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoalView"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/builds/lock/component/{component_id}": {
+      "post": {
+        "tags": [
+          "builds"
+        ],
+        "summary": "Lock Component",
+        "operationId": "lock_component_api_v1_builds_lock_component__component_id__post",
+        "parameters": [
+          {
+            "name": "component_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Component Id"
+            }
+          },
+          {
+            "name": "listing",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Listing"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HomeProjection"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/builds/lock/draft": {
+      "post": {
+        "tags": [
+          "builds"
+        ],
+        "summary": "Lock Draft",
+        "operationId": "lock_draft_api_v1_builds_lock_draft_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LockDraftBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HomeProjection"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/builds/unlock": {
+      "post": {
+        "tags": [
+          "builds"
+        ],
+        "summary": "Unlock",
+        "operationId": "unlock_api_v1_builds_unlock_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnlockBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HomeProjection"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/market": {
+      "get": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Get Market",
+        "operationId": "get_market_api_v1_market_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketProjection"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ComponentGroupView": {
+        "properties": {
+          "component": {
+            "$ref": "#/components/schemas/ComponentView"
+          },
+          "listings": {
+            "items": {
+              "$ref": "#/components/schemas/ListingView"
+            },
+            "type": "array",
+            "title": "Listings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "component",
+          "listings"
+        ],
+        "title": "ComponentGroupView"
+      },
+      "ComponentView": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "manufacturer": {
+            "type": "string",
+            "title": "Manufacturer"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "category",
+          "manufacturer",
+          "model"
+        ],
+        "title": "ComponentView"
+      },
+      "DraftBuildView": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "total_cents": {
+            "type": "integer",
+            "title": "Total Cents"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "default": "USD"
+          },
+          "slots": {
+            "items": {
+              "$ref": "#/components/schemas/DraftSlotView"
+            },
+            "type": "array",
+            "title": "Slots"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "total_cents",
+          "slots"
+        ],
+        "title": "DraftBuildView"
+      },
+      "DraftSlotView": {
+        "properties": {
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "locked": {
+            "type": "boolean",
+            "title": "Locked",
+            "default": false
+          },
+          "component": {
+            "$ref": "#/components/schemas/ComponentView"
+          },
+          "listing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ListingView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "category",
+          "component"
+        ],
+        "title": "DraftSlotView"
+      },
+      "GoalUpdate": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "GoalUpdate"
+      },
+      "GoalView": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "GoalView"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HomeProjection": {
+        "properties": {
+          "goal": {
+            "$ref": "#/components/schemas/GoalView"
+          },
+          "master": {
+            "$ref": "#/components/schemas/MasterBuildView"
+          },
+          "drafts": {
+            "items": {
+              "$ref": "#/components/schemas/DraftBuildView"
+            },
+            "type": "array",
+            "title": "Drafts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "goal",
+          "master",
+          "drafts"
+        ],
+        "title": "HomeProjection"
+      },
+      "ListingView": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "component_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Component Id"
+          },
+          "marketplace": {
+            "type": "string",
+            "title": "Marketplace"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "listing_url": {
+            "type": "string",
+            "title": "Listing Url"
+          },
+          "seller": {
+            "type": "string",
+            "title": "Seller"
+          },
+          "condition": {
+            "type": "string",
+            "title": "Condition"
+          },
+          "reliability_score": {
+            "type": "number",
+            "title": "Reliability Score"
+          },
+          "price_cents": {
+            "type": "integer",
+            "title": "Price Cents"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url",
+            "default": ""
+          },
+          "manufacturer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Manufacturer"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "marketplace",
+          "title",
+          "listing_url",
+          "seller",
+          "condition",
+          "reliability_score",
+          "price_cents",
+          "currency"
+        ],
+        "title": "ListingView"
+      },
+      "LockDraftBody": {
+        "properties": {
+          "draftId": {
+            "type": "string",
+            "title": "Draftid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "draftId"
+        ],
+        "title": "LockDraftBody"
+      },
+      "MarketProjection": {
+        "properties": {
+          "groups": {
+            "items": {
+              "$ref": "#/components/schemas/ComponentGroupView"
+            },
+            "type": "array",
+            "title": "Groups"
+          }
+        },
+        "type": "object",
+        "required": [
+          "groups"
+        ],
+        "title": "MarketProjection"
+      },
+      "MarketplaceSyncRequest": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "incremental",
+              "full"
+            ],
+            "title": "Mode",
+            "default": "incremental"
+          }
+        },
+        "type": "object",
+        "title": "MarketplaceSyncRequest"
+      },
+      "MarketplaceSyncResult": {
+        "properties": {
+          "sources": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "fetched": {
+            "type": "integer",
+            "title": "Fetched"
+          },
+          "upserted": {
+            "type": "integer",
+            "title": "Upserted"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sources",
+          "fetched",
+          "upserted"
+        ],
+        "title": "MarketplaceSyncResult"
+      },
+      "MasterBuildView": {
+        "properties": {
+          "slots": {
+            "items": {
+              "$ref": "#/components/schemas/MasterSlotView"
+            },
+            "type": "array",
+            "title": "Slots"
+          },
+          "total_cents": {
+            "type": "integer",
+            "title": "Total Cents"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "default": "USD"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slots",
+          "total_cents"
+        ],
+        "title": "MasterBuildView"
+      },
+      "MasterSlotView": {
+        "properties": {
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "component": {
+            "$ref": "#/components/schemas/ComponentView"
+          },
+          "listing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ListingView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "locked_at": {
+            "type": "string",
+            "title": "Locked At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "category",
+          "component",
+          "locked_at"
+        ],
+        "title": "MasterSlotView"
+      },
+      "UnlockBody": {
+        "properties": {
+          "category": {
+            "type": "string",
+            "title": "Category"
+          }
+        },
+        "type": "object",
+        "required": [
+          "category"
+        ],
+        "title": "UnlockBody"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

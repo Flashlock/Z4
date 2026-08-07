@@ -1,0 +1,20 @@
+﻿# Accidental Windows/sandbox trees
+.tools/
+.cursor/
+AppData/
+Program Files/
+Program Files (x86)/
+ProgramData/
+Users/
+bin/
+
+# Build / venv / deps (also covered under src/)
+**/.venv/
+**/.build/
+**/__pycache__/
+*.py[cod]
+**/*.egg-info/
+**/node_modules/
+**/dist_mfe/
+**/dist/
+**/data/
