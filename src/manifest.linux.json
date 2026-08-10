@@ -1,0 +1,48 @@
+{
+  "agentId": "com.pantheon.z4",
+  "packageName": "Z4",
+  "version": "0.1.0",
+  "description": "Continuously monitors PC component markets to design the optimal build at the lowest practical cost.",
+  "author": "Z4",
+  "developer": {
+    "name": "Z4",
+    "supportUrl": "https://example.com/z4/support"
+  },
+  "details": "docs/details.md",
+  "runtime": {
+    "binaryRelativePath": "bin/z4",
+    "openApiRelativePath": "docs/openapi.json",
+    "defaultResourceTier": "PERFORMANCE",
+    "supportedPlatforms": [
+      { "os": "linux", "arch": "x86_64" }
+    ]
+  },
+  "features": {
+    "hitl": true
+  },
+  "mfeDirectory": "dist_mfe",
+  "branding": {
+    "primaryColor": "#2563EB",
+    "secondaryColor": "#475569",
+    "accentColor": "#C97A2B",
+    "successColor": "#16A34A",
+    "warningColor": "#F59E0B",
+    "dangerColor": "#DC2626",
+    "backgroundColor": "#0F172A",
+    "surfaceColor": "#1E293B"
+  },
+  "instanceConfigSchema": {
+    "fields": []
+  },
+  "customTelemetrySchema": {
+    "visualGrid": []
+  },
+  "recommendedAutomation": [
+    {
+      "name": "Marketplace sync",
+      "cronExpression": "0 0 */6 * * *",
+      "targetEndpoint": "POST:/api/v1/jobs/marketplace-sync",
+      "payloadTemplate": "{\"mode\":\"incremental\"}"
+    }
+  ]
+}

@@ -2,47 +2,53 @@
 
 Run from `src/` (package root).
 
-## Local toolchains (workspace)
+## Windows (existing)
 
-- Python: `../.tools/python/python.exe`
-- Node/npm: `../.tools/node/`
-
-## Create venv + install API deps
+Local toolchains under `../.tools/` when present:
 
 ```bash
 ..\.tools\python\python.exe -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -U pip
 .\.venv\Scripts\python.exe -m pip install -e ".[dev]"
-```
-
-## Export OpenAPI (required for Hub install)
-
-```bash
 .\.venv\Scripts\python.exe scripts/export_openapi.py
+.\.venv\Scripts\python.exe scripts/build_shim.py
 ```
 
-Writes `docs/openapi.json` from the live FastAPI app. Do not hand-edit that file.
-
-## Dev without Hub
+Dev without Hub:
 
 ```bash
 set AGENT_SERVICE_PORT=8787
 .\.venv\Scripts\python.exe scripts/shim_entry.py
 ```
 
-## Build stable Pantheon shim (`bin/z4.exe`)
+Windows package uses committed `manifest.json` (`bin/z4.exe`, windows-only platforms).
+
+## Fedora / Linux
+
+Use system Python ≥ 3.11 and Node (do **not** use Windows `../.tools`).
 
 ```bash
-.\.venv\Scripts\python.exe scripts/build_shim.py
+sudo dnf install python3 python3-devel nodejs npm
+
+cd src
+python3 -m venv .venv
+.venv/bin/python -m pip install -U pip
+.venv/bin/python -m pip install -e ".[dev]"
+
+.venv/bin/python scripts/export_openapi.py
+cd mfe && npm install && npm run build && cd ..
+.venv/bin/python scripts/build_shim.py
+# → bin/z4 and dist/linux/ (static linux-only manifest + Hub-ready tree)
 ```
 
-Hub always starts `bin/z4.exe`. The shim delegates to `.venv` + `uvicorn --reload` against `api/`.
-
-## Build MFE
+Dev without Hub:
 
 ```bash
-cd mfe
-$env:PATH = "..\..\.tools\node;" + $env:PATH
-npm install
-npm run build
+export AGENT_SERVICE_PORT=8787
+.venv/bin/python scripts/shim_entry.py
+# or: ./bin/z4
 ```
+
+**Hub install on Fedora:** Add Agent → local folder → `src/dist/linux` (linux-only `manifest.json`, `bin/z4`). Ensure `dist/linux/.venv` exists (copied from `src/.venv` by `build_shim.py`).
+
+Linux package identity is [`manifest.linux.json`](../manifest.linux.json) (`bin/z4`, `linux`/`x86_64` only). Windows `manifest.json` is unchanged.

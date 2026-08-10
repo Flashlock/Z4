@@ -8,3 +8,5 @@ mfe/node_modules/
 dist_mfe/
 bin/*.exe
 bin/*.dll
+bin/z4
+dist/

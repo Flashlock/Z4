@@ -1,8 +1,8 @@
 """
 Stable Pantheon launcher entry.
 
-Hub always starts bin/z4.exe. The shim resolves the package root and delegates
-to the project venv's Python running uvicorn --reload (hot reload for Phase 1).
+Hub starts bin/z4.exe (Windows) or bin/z4 (Linux). The shim resolves the package
+root and delegates to the project venv's Python running uvicorn --reload.
 """
 
 from __future__ import annotations
@@ -14,18 +14,25 @@ from pathlib import Path
 
 
 def package_root_from_exe() -> Path:
-    # PyInstaller one-file: sys.executable is bin/z4.exe
     exe = Path(sys.executable).resolve()
-    if exe.name.lower() == "z4.exe" and exe.parent.name.lower() == "bin":
+    name = exe.name.lower()
+    if exe.parent.name.lower() == "bin" and name in ("z4.exe", "z4"):
         return exe.parent.parent
     # Dev fallback when running as python scripts/shim_entry.py
     return Path(__file__).resolve().parents[1]
 
 
 def resolve_python(root: Path) -> Path:
-    venv_python = root / ".venv" / "Scripts" / "python.exe"
-    if venv_python.exists():
-        return venv_python
+    if sys.platform == "win32":
+        candidates = (root / ".venv" / "Scripts" / "python.exe",)
+    else:
+        candidates = (
+            root / ".venv" / "bin" / "python",
+            root / ".venv" / "bin" / "python3",
+        )
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
     return Path(sys.executable)
 
 
